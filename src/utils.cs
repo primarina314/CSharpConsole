@@ -8,7 +8,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Drawing;
 
-namespace Utility
+namespace MyUtility
 {
 	class MyUtils
 	{
