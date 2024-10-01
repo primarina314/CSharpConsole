@@ -7,26 +7,8 @@ using System.Diagnostics;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using MyUtility;
 
-namespace Utility
-{
-	class MyUtils
-	{
-		public static Decimal Sqrt(Decimal value)
-		{
-			if(value < 0.0M) return -1.0M;
-			Decimal crit = 1.0M;
-			Decimal times = (value > 1.0M) ? 16.0M : 0.0625M;
-			
-			while(!(crit<=value&&value<crit*times || crit>=value&&value>crit*times)) crit *= times;
-			
-			int cnt = 100;// The larger cnt is, the higher the precision is.
-			while(cnt-- > 0) crit = 0.5M * (crit + value/crit);
-			
-			return crit;
-		}
-	}
-}
 
 namespace Celestial
 {
@@ -139,7 +121,7 @@ namespace Celestial
 		
 		public void Update()
 		{
-			Decimal distX - 0.0M, distY = 0.0M;
+			Decimal distX = 0.0M, distY = 0.0M;
 			Decimal dist3 = 0.0M;
 			Decimal[] accX = new Decimal[objects.Count];
 			Decimal[] accY = new Decimal[objects.Count];
