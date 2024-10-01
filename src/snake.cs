@@ -24,7 +24,7 @@ namespace SnakeGame
 		private Direction headDir;
 		private Direction tailDir;
 		
-		public Snake(int i=0, j=0)
+		public Snake(int i=0, int j=0)
 		{
 			body = new LinkedList<Tuple<int,int>>();
 			body.AddFirst(new Tuple<int,int>(i,j));
@@ -167,7 +167,7 @@ namespace SnakeGame
 			Console.BackgroundColor = ConsoleColor.Black;
 			
 			map = new Area[MAP_SIZE_R, MAP_SIZE_C];
-			snake = new Snake(map.GetLength(0)/2, map.GetLength(1));
+			snake = new Snake(map.GetLength(0)/2, map.GetLength(1)/2);
 			for(int i=0;i<map.GetLength(0);i++) for(int j=0;j<map.GetLength(0);j++) map[i,j] = Area.reachable;
 			// map[10,10] = Area.unreachable;
 			
@@ -314,10 +314,8 @@ namespace SnakeGame
 			Without this optimization, the printing out process takes pretty much time, which might lead to raggings.
 			It's because the printing out process takes much more times than the other calculations.
 			*/
-			
 			Tuple<int,int> tail = snake.GetTail();
 			Console.ForegroundColor = ConsoleColor.Gray;
-			
 			switch(snake.TailDir)
 			{
 				case Direction.left:
@@ -360,6 +358,7 @@ namespace SnakeGame
 					Console.Write(shape);
 				}
 			}
+			
 			// Below is for highlighing the head with color blue.
 			if(head.Item1>=0 && head.Item1<map.GetLength(0) && head.Item2>=0 && head.Item2<map.GetLength(1))
 			{
@@ -383,7 +382,6 @@ namespace SnakeGame
 			Console.SetCursorPosition(0, MAP_SIZE_R);
 			Console.ForegroundColor = ConsoleColor.White;
 			Console.WriteLine("Score: " + score);
-			Console.WriteLine();
 			
 			if(score%10==0 && MOVE_TICK>10)
 			{
