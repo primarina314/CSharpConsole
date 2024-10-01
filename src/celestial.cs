@@ -186,7 +186,44 @@ namespace Celestial
 		
 		public override string ToString()
 		{
+			StringBuilder res = new StringBuilder("");
+			foreach(var item in objects)
+			{
+				res.Append(item.ToString());
+				res.Append(", ");
+			}
+			return res.ToString();
+		}
+		
+		public void Draw()
+		{
+			foreach(var pos in prevPosition)
+			{
+				Console.SetCursorPosition(pos.Item2,pos.Item1);
+				Console.Write(' ');
+			}
+			prevPosition.Clear();
 			
+			foreach(var co in objects)
+			{
+				Tuple<int,int> arrPos = GetArrayPosition(co);
+				if(arrPos.Item1>=0 && arrPos.Item1<board.GetLength(0) && arrPos.Item2>=0 && arrPos.Item2<board.GetLength(1))
+				{
+					Console.SetCursorPosition(arrPos.Item2, arrPos.Item1);
+					Console.Write('*');
+					prevPosition.Add(arrPos);
+				}
+			}
+			
+			return;
+		}
+		
+		private Tuple<int, int> GetArrayPosition(CelestialObject co)
+		{
+			// internally dividing point
+			int res2 = (int)((co.PosX - fromX) / (toX - fromX) * SCREEN_SIZE_X);
+			int res1 = (int)((1 - (co.PosY - fromY) / (toY - fromY)) * SCREEN_SIZE_Y);
+			return new Tuple<int, int>(res1, res2);
 		}
 	}
 	
