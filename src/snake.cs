@@ -376,5 +376,74 @@ namespace SnakeGame
 			// printing's conducted at head, neck, and tail only. - O(1) time in printing
 			return;
 		}
+		
+		private void Score()
+		{
+			int score = snake.Body.Count - 1;
+			Console.SetCursorPosition(0, MAP_SIZE_R);
+			Console.ForegroundColor = ConsoleColor.White;
+			Console.WriteLine("Score: " + score);
+			Console.WriteLine();
+			
+			if(score%10==0 && MOVE_TICK>10)
+			{
+				MOVE_TICK -= 10;
+				Console.Write("Level: " + (score/10+1));
+			}
+			if(highscore < score) FileSystem.SaveScore(score);
+			
+		}
+	}
+	
+	class FileSystem
+	{
+		public static void SaveScore(int score)
+		{
+			StreamWriter writer = null;
+			string BASE = score.ToString();
+			
+			try
+			{
+				writer = new StreamWriter(@"./Data.ini");
+				writer.Write(BASE);
+			}
+			finally
+			{
+				if(writer != null) writer.Close();
+			}
+		}
+		
+		private static int StringToInt(string str)
+		{
+			int res = 0;
+			foreach(char item in str) res = res*10 + item-'0';
+			return res;
+		}
+		
+		public static int LoadScore()
+		{
+			StreamReader reader = null;
+			int score = 0;
+			
+			try
+			{
+				reader = new StreamReader(@"./Data.ini");
+				string BASE = reader.ReadToEnd();
+				score = StringToInt(BASE);
+			}
+			catch(FileNotFoundException)
+			{
+				
+			}
+			catch(FormatException)
+			{
+				
+			}
+			finally
+			{
+				if(reader != null) reader.Close();
+			}
+			return score;
+		}
 	}
 }
