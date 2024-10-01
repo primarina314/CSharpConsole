@@ -325,10 +325,56 @@ namespace SnakeGame
 					Console.SetCursorPosition(tail.Item2-1,tail.Item1);
 					break;
 				case Direction.right:
-					
+					map[tail.Item1,tail.Item2+1] = Area.reachable;
+					Console.SetCursorPosition(tail.Item2+1,tail.Item1);
 					break;
-				
+				case Direction.up:
+					map[tail.Item1-1,tail.Item2] = Area.reachable;
+					Console.SetCursorPosition(tail.Item2,tail.Item1-1);
+					break;
+				case Direction.down:
+					map[tail.Item1+1,tail.Item2] = Area.reachable;
+					Console.SetCursorPosition(tail.Item2,tail.Item1+1);
+					break;
 			}
+			Console.Write(shape);
+			
+			/*
+			Q. what if the position of newly created feed is same with the tail?
+			A. The below line draws the feed after the passing way(path) handling above/
+			*/
+			Console.SetCursorPosition(feedY,feedX);
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.Write(shape);
+			
+			Tuple<int,int> head = snake.GetHead();
+			// Below is for uncolored positions resulted from overlap btw head and the other body parts. - const time.
+			foreach(var item in snake.Body)
+			{
+				if(item == head) continue;
+				if(map[item.Item1,item.Item2]==Area.reachable || map[item.Item1,item.Item2]==Area.feed)
+				{
+					map[item.Item1,item.Item2] = Area.occupied;
+					Console.SetCursorPosition(item.Item2,item.Item1);
+					Console.ForegroundColor = ConsoleColor.Green;
+					Console.Write(shape);
+				}
+			}
+			// Below is for highlighing the head with color blue.
+			if(head.Item1>=0 && head.Item1<map.GetLength(0) && head.Item2>=0 && head.Item2<map.GetLength(1))
+			{
+				Console.SetCursorPosition(head.Item2,head.Item1);
+				Console.ForegroundColor = ConsoleColor.Blue;
+				Console.Write(shape);
+				if(snake.Body.Count <= 1) return;
+				
+				Tuple<int,int> neck = snake.GetNeck();
+				Console.SetCursorPosition(neck.Item2, neck.Item1);
+				Console.ForegroundColor = ConsoleColor.Green;
+				Console.Write(shape);
+			}
+			// printing's conducted at head, neck, and tail only. - O(1) time in printing
+			return;
 		}
 	}
 }
