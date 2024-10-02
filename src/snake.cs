@@ -145,7 +145,7 @@ namespace SnakeGame
 		private int TIMER_TICK = 100;
 		
 		private const int MAP_SIZE_R = 20;
-		private const int MAP_SIZE_C = 20;
+		private const int MAP_SIZE_C = 30;
 		
 		private Area[,] map;
 		private Snake snake;
@@ -161,6 +161,7 @@ namespace SnakeGame
 		// string - heap - dynamically allocated - slower
 		
 		private bool isColorReversed = false;
+		private List<int> reachablePos;
 		
 		public GameManager()
 		{
@@ -170,10 +171,18 @@ namespace SnakeGame
 			Console.SetCursorPosition(0,0);
 			Console.BackgroundColor = ConsoleColor.Black;
 			
+			// map initialization
 			map = new Area[MAP_SIZE_R, MAP_SIZE_C];
 			snake = new Snake(map.GetLength(0)/2, map.GetLength(1)/2);
-			for(int i=0;i<map.GetLength(0);i++) for(int j=0;j<map.GetLength(0);j++) map[i,j] = Area.reachable;
+			for(int i=0;i<map.GetLength(0);i++) for(int j=0;j<map.GetLength(1);j++) map[i,j] = Area.reachable;
 			// map[10,10] = Area.unreachable;
+			//for(int i=0;i<map.GetLength(0)/3;i++) for(int j=0;j<map.GetLength(1);j++) map[i,j] = Area.unreachable;
+			
+			// Collect reachable areas in reachablePos.
+			reachablePos = new List<int>();
+			for(int i=0;i<map.GetLength(0);i++) for(int j=0;j<map.GetLength(1);j++)
+				if(map[i,j] == Area.reachable) reachablePos.Add(i*map.GetLength(1) + j);
+			
 			
 			CreateNewFeed();
 			updated = true;
@@ -243,10 +252,9 @@ namespace SnakeGame
 			// Color change's delt with in Draw/Update function
 			
 			Random random = new Random();
-			feedX = random.Next(0,map.GetLength(0));
-			feedY = random.Next(0,map.GetLength(1));
-			// 생성 위치 - 단순 랜덤이 아니라, unreachable 제외한 곳에서 random
-			
+			int p = reachablePos[random.Next(0, reachablePos.Count)];
+			feedX = p / map.GetLength(1);
+			feedY = p % map.GetLength(1);
 			
 			map[feedX,feedY] = Area.feed;
 		}
