@@ -157,6 +157,9 @@ namespace SnakeGame
 		private int highscore;
 		
 		private string shape = "@@";
+		// char - stack - faster / but restriction in shape
+		// string - heap - dynamically allocated - slower
+		
 		private bool isColorReversed = false;
 		
 		public GameManager()
