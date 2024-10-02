@@ -156,8 +156,8 @@ namespace SnakeGame
 		
 		private int highscore;
 		
-		private string shape = "@%";
-		private bool isForeground = true;
+		private string shape = "@@";
+		private bool isColorReversed = false;
 		
 		public GameManager()
 		{
@@ -208,12 +208,12 @@ namespace SnakeGame
 					if(input.Key == ConsoleKey.Escape)
 					{
 						Console.SetCursorPosition(0,MAP_SIZE_R+2);
-						Console.ForegroundColor = ConsoleColor.White;
+						SetColor(ConsoleColor.White, ConsoleColor.Black);
 						Console.WriteLine("PAUSE      ");
 						while(!Console.KeyAvailable);
 						
 						Console.SetCursorPosition(0,MAP_SIZE_R+2);
-						Console.ForegroundColor = ConsoleColor.White;
+						SetColor(ConsoleColor.White, ConsoleColor.Black);
 						Console.WriteLine("IN PROGRESS");
 					}
 				}
@@ -268,8 +268,6 @@ namespace SnakeGame
 				Console.ForegroundColor = ConsoleColor.Red;
 				Console.BackgroundColor = ConsoleColor.White;
 				Console.WriteLine("---GAME OVER---");
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.BackgroundColor = ConsoleColor.Black;
 			}
 			
 			return res;
@@ -285,16 +283,16 @@ namespace SnakeGame
 					switch(map[i,j])
 					{
 						case Area.reachable:
-							Console.ForegroundColor = ConsoleColor.Gray;
+							SetColor(ConsoleColor.Gray);
 							break;
 						case Area.unreachable:
-							Console.ForegroundColor = ConsoleColor.Black;
+							SetColor(ConsoleColor.Black);
 							break;
 						case Area.occupied:
-							Console.ForegroundColor = ConsoleColor.Green;
+							SetColor(ConsoleColor.Green);
 							break;
 						case Area.feed:
-							Console.ForegroundColor = ConsoleColor.Red;
+							SetColor(ConsoleColor.Red);
 							break;
 						
 					}
@@ -318,7 +316,7 @@ namespace SnakeGame
 			It's because the printing out process takes much more times than the other calculations.
 			*/
 			Tuple<int,int> tail = snake.GetTail();
-			Console.ForegroundColor = ConsoleColor.Gray;
+			SetColor(ConsoleColor.Gray);
 			switch(snake.TailDir)
 			{
 				case Direction.left:
@@ -345,7 +343,7 @@ namespace SnakeGame
 			A. The below line draws the feed after the passing way(path) handling above/
 			*/
 			Console.SetCursorPosition(feedY*shape.Length,feedX);
-			Console.ForegroundColor = ConsoleColor.Red;
+			SetColor(ConsoleColor.Red);
 			Console.Write(shape);
 			
 			Tuple<int,int> head = snake.GetHead();
@@ -357,7 +355,7 @@ namespace SnakeGame
 				{
 					map[item.Item1,item.Item2] = Area.occupied;
 					Console.SetCursorPosition(item.Item2*shape.Length,item.Item1);
-					Console.ForegroundColor = ConsoleColor.Green;
+					SetColor(ConsoleColor.Green);
 					Console.Write(shape);
 				}
 			}
@@ -366,13 +364,13 @@ namespace SnakeGame
 			if(head.Item1>=0 && head.Item1<map.GetLength(0) && head.Item2>=0 && head.Item2<map.GetLength(1))
 			{
 				Console.SetCursorPosition(head.Item2*shape.Length,head.Item1);
-				Console.ForegroundColor = ConsoleColor.Blue;
+				SetColor(ConsoleColor.Blue);
 				Console.Write(shape);
 				if(snake.Body.Count <= 1) return;
 				
 				Tuple<int,int> neck = snake.GetNeck();
 				Console.SetCursorPosition(neck.Item2*shape.Length, neck.Item1);
-				Console.ForegroundColor = ConsoleColor.Green;
+				SetColor(ConsoleColor.Green);
 				Console.Write(shape);
 			}
 			// printing's conducted at head, neck, and tail only. - O(1) time in printing
@@ -384,6 +382,7 @@ namespace SnakeGame
 			int score = snake.Body.Count - 1;
 			Console.SetCursorPosition(0, MAP_SIZE_R);
 			Console.ForegroundColor = ConsoleColor.White;
+			Console.BackgroundColor = ConsoleColor.Black;
 			Console.WriteLine("Score: " + score);
 			
 			if(score%10==0 && MOVE_TICK>10)
@@ -393,6 +392,24 @@ namespace SnakeGame
 			}
 			if(highscore < score) FileSystem.SaveScore(score);
 			
+		}
+		
+		private void SetCursorPosition(int x, int y)
+		{
+			Console.SetCursorPosition(x*shape.Length, y);
+		}
+		private void SetColor(ConsoleColor fore = ConsoleColor.Black, ConsoleColor back = ConsoleColor.Black)
+		{
+			if(!isColorReversed)
+			{
+				Console.ForegroundColor = fore;
+				Console.BackgroundColor = back;
+			}
+			else
+			{
+				Console.ForegroundColor = back;
+				Console.BackgroundColor = fore;
+			}
 		}
 	}
 	
