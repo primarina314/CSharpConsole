@@ -144,8 +144,8 @@ namespace SnakeGame
 		private int MOVE_TICK = 100;
 		private int TIMER_TICK = 100;
 		
-		private const int MAP_SIZE_R = 30;
-		private const int MAP_SIZE_C = 60;
+		private const int MAP_SIZE_R = 20;
+		private const int MAP_SIZE_C = 20;
 		
 		private Area[,] map;
 		private Snake snake;
@@ -156,13 +156,14 @@ namespace SnakeGame
 		
 		private int highscore;
 		
-		private char shape = '@';
+		private string shape = "@%";
+		private bool isForeground = true;
 		
 		public GameManager()
 		{
 			Console.CursorVisible = false;
 			Console.Clear();
-			Console.SetWindowSize(MAP_SIZE_C, MAP_SIZE_R+4);
+			Console.SetWindowSize(MAP_SIZE_C*shape.Length, MAP_SIZE_R+4);
 			Console.SetCursorPosition(0,0);
 			Console.BackgroundColor = ConsoleColor.Black;
 			
@@ -263,7 +264,7 @@ namespace SnakeGame
 			
 			if(res)
 			{
-				Console.SetCursorPosition(map.GetLength(1)/2-9, map.GetLength(0)/2);
+				Console.SetCursorPosition(map.GetLength(1)*shape.Length/2-9, map.GetLength(0)/2);
 				Console.ForegroundColor = ConsoleColor.Red;
 				Console.BackgroundColor = ConsoleColor.White;
 				Console.WriteLine("---GAME OVER---");
@@ -322,19 +323,19 @@ namespace SnakeGame
 			{
 				case Direction.left:
 					map[tail.Item1,tail.Item2-1] = Area.reachable;
-					Console.SetCursorPosition(tail.Item2-1,tail.Item1);
+					Console.SetCursorPosition((tail.Item2-1)*shape.Length,tail.Item1);
 					break;
 				case Direction.right:
 					map[tail.Item1,tail.Item2+1] = Area.reachable;
-					Console.SetCursorPosition(tail.Item2+1,tail.Item1);
+					Console.SetCursorPosition((tail.Item2+1)*shape.Length,tail.Item1);
 					break;
 				case Direction.up:
 					map[tail.Item1-1,tail.Item2] = Area.reachable;
-					Console.SetCursorPosition(tail.Item2,tail.Item1-1);
+					Console.SetCursorPosition(tail.Item2*shape.Length,tail.Item1-1);
 					break;
 				case Direction.down:
 					map[tail.Item1+1,tail.Item2] = Area.reachable;
-					Console.SetCursorPosition(tail.Item2,tail.Item1+1);
+					Console.SetCursorPosition(tail.Item2*shape.Length,tail.Item1+1);
 					break;
 			}
 			Console.Write(shape);
@@ -343,7 +344,7 @@ namespace SnakeGame
 			Q. what if the position of newly created feed is same with the tail?
 			A. The below line draws the feed after the passing way(path) handling above/
 			*/
-			Console.SetCursorPosition(feedY,feedX);
+			Console.SetCursorPosition(feedY*shape.Length,feedX);
 			Console.ForegroundColor = ConsoleColor.Red;
 			Console.Write(shape);
 			
@@ -355,7 +356,7 @@ namespace SnakeGame
 				if(map[item.Item1,item.Item2]==Area.reachable || map[item.Item1,item.Item2]==Area.feed)
 				{
 					map[item.Item1,item.Item2] = Area.occupied;
-					Console.SetCursorPosition(item.Item2,item.Item1);
+					Console.SetCursorPosition(item.Item2*shape.Length,item.Item1);
 					Console.ForegroundColor = ConsoleColor.Green;
 					Console.Write(shape);
 				}
@@ -364,13 +365,13 @@ namespace SnakeGame
 			// Below is for highlighing the head with color blue.
 			if(head.Item1>=0 && head.Item1<map.GetLength(0) && head.Item2>=0 && head.Item2<map.GetLength(1))
 			{
-				Console.SetCursorPosition(head.Item2,head.Item1);
+				Console.SetCursorPosition(head.Item2*shape.Length,head.Item1);
 				Console.ForegroundColor = ConsoleColor.Blue;
 				Console.Write(shape);
 				if(snake.Body.Count <= 1) return;
 				
 				Tuple<int,int> neck = snake.GetNeck();
-				Console.SetCursorPosition(neck.Item2, neck.Item1);
+				Console.SetCursorPosition(neck.Item2*shape.Length, neck.Item1);
 				Console.ForegroundColor = ConsoleColor.Green;
 				Console.Write(shape);
 			}
