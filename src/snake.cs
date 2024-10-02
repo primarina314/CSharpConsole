@@ -241,6 +241,8 @@ namespace SnakeGame
 			Random random = new Random();
 			feedX = random.Next(0,map.GetLength(0));
 			feedY = random.Next(0,map.GetLength(1));
+			// 생성 위치 - 단순 랜덤이 아니라, unreachable 제외한 곳에서 random
+			
 			
 			map[feedX,feedY] = Area.feed;
 		}
