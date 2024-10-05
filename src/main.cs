@@ -31,6 +31,18 @@ public class Person
 			else name = "NONAME";
 		}
 	}
+	private string job = "inoccupation";
+	
+	public Guid Id { get; set; } = Guid.NewGuid();
+	
+	// public string Job
+	// {
+	// 	get => job;
+	// 	set => job = value;
+	// }
+
+	
+	public void SayHi() => Console.WriteLine("Hello!");
 	
 	private int age;
 	private string name;
@@ -43,16 +55,33 @@ public class Person
 	
 	public override string ToString()
 	{
-		return name + ", " + age + "years old.";
+		return name + ", " + age + " years old. id: " + Id;
 	}
+	
+	public string Message { get; private set; } = "Readonly property";
 	
 }
 
 public class main {
 	public static void Main() {
 		// GroupBy
-		Person p = new Person { Name = "An  ne  ewr  가나", Age = 21 };
-		Console.WriteLine(p);
+		
+		var data = new { Id = 1, Name = "AnonymousType"};
+		Console.WriteLine($"{data.Id}, {data.Name}");
+		Console.WriteLine($"{data.GetType()}");
+		
+		var anonys = new[] {
+			new { Name = "qwer", Age = 20 },
+			new { Name = "asdf", Age = 21 },
+			new { Name = "zxcv", Age = 22 }
+		};
+		
+		foreach(var item in anonys) Console.WriteLine($"{item.Name}, {item.Age}");
+		
+		// Duck Typing
+		var duck = new { Id = 1, Name = "Quack" };
+		Console.WriteLine($"{duck.Id}, {duck.Name}");
+		// duck = new { Id = 3.14, Wing = "Double wing" }; // error - duck typing
 		
 		
 		return;
