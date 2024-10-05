@@ -5,6 +5,7 @@ using System.Threading;
 using System.IO;
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using SnakeGame;
@@ -12,22 +13,46 @@ using Celestial;
 
 public class Person
 {
-	public int Age { get { return age; } }
-	public string Name { get { return name; } }
+	public int Age {
+		get {
+			return age;
+		}
+		set {
+			if(value >= 0) age = value;
+		}
+	}
+	public string Name {
+		get {
+			return name;
+		}
+		set {
+			Regex regex = new Regex(@"^[가-힣a-zA-Z\s]+$");
+			if(regex.IsMatch(value)) name = value;
+			else name = "NONAME";
+		}
+	}
 	
 	private int age;
 	private string name;
 	
-	public Person(string name, int age)
+	public Person(string name = "", int age = 0)
 	{
 		this.name = name;
 		this.age = age;
+	}
+	
+	public override string ToString()
+	{
+		return name + ", " + age + "years old.";
 	}
 	
 }
 
 public class main {
 	public static void Main() {
+		// GroupBy
+		Person p = new Person { Name = "An  ne  ewr  가나", Age = 21 };
+		Console.WriteLine(p);
 		
 		
 		return;
